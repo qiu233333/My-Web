@@ -817,6 +817,7 @@
         let currentSongIndex = 0;
         let isDraggingProgress = false;
         let lastTrailTime = 0;
+        let waitingForMusicUnlock = false;
 
         function openModal(id) {
             const modal = document.getElementById(id);
@@ -863,6 +864,30 @@
             playPauseButton.textContent = audio.paused ? "▶" : "Ⅱ";
         }
 
+        function removeMusicUnlockListeners() {
+            document.removeEventListener("pointerdown", unlockMusicAfterUserGesture);
+            document.removeEventListener("keydown", unlockMusicAfterUserGesture);
+            document.removeEventListener("touchstart", unlockMusicAfterUserGesture);
+        }
+
+        function waitForMusicUnlock(error) {
+            waitingForMusicUnlock = true;
+            updateMusicButton();
+
+            if (error?.name === "NotAllowedError") {
+                console.info("背景音乐自动播放被浏览器拦截，等待用户交互后继续播放。");
+            }
+
+            document.addEventListener("pointerdown", unlockMusicAfterUserGesture);
+            document.addEventListener("keydown", unlockMusicAfterUserGesture);
+            document.addEventListener("touchstart", unlockMusicAfterUserGesture, { passive: true });
+        }
+
+        function unlockMusicAfterUserGesture() {
+            if (!waitingForMusicUnlock || !audio.paused) return;
+            playCurrentSong();
+        }
+
         function loadSong(index, shouldPlay = false) {
             currentSongIndex = (index + songList.length) % songList.length;
             const song = songList[currentSongIndex];
@@ -873,12 +898,18 @@
             refreshSongList();
 
             if (shouldPlay) {
-                audio.play().catch(updateMusicButton);
+                playCurrentSong();
             }
         }
 
         function playCurrentSong() {
-            audio.play().then(updateMusicButton).catch(updateMusicButton);
+            audio.play()
+                .then(() => {
+                    waitingForMusicUnlock = false;
+                    removeMusicUnlockListeners();
+                    updateMusicButton();
+                })
+                .catch(waitForMusicUnlock);
         }
 
         function toggleMusic() {
