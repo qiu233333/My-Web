@@ -4,10 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>二次元个人主页</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <title>桜小路秋玌的个人网站</title>
 
     <style>
         * {
@@ -17,7 +14,7 @@
         }
 
         body {
-            font-family: "Microsoft YaHei", sans-serif;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
             background: linear-gradient(rgba(10,10,30,0.75),rgba(10,10,30,0.75)), url("https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1600&auto=format&fit=crop");
             background-size: cover;
             background-position: center;
@@ -25,8 +22,6 @@
             color: white;
             overflow-x: hidden;
         }
-
-        /* 顶部导航 */
 
         nav {
             width: 100%;
@@ -44,10 +39,11 @@
         }
 
         .logo {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: bold;
             color: #ffb6ff;
             text-shadow: 0 0 10px #ff8ef2;
+            line-height: 1.4;
         }
 
         .menu {
@@ -55,28 +51,26 @@
             gap: 30px;
         }
 
-            .menu a {
-                color: white;
-                text-decoration: none;
-                transition: 0.3s;
-            }
+        .menu a {
+            color: white;
+            text-decoration: none;
+            transition: 0.3s;
+        }
 
-                .menu a:hover {
-                    color: #ff9df5;
-                }
-
-        /* 主界面 */
+        .menu a:hover {
+            color: #ff9df5;
+        }
 
         .hero {
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 100px 20px;
+            padding: 120px 20px 80px;
         }
 
         .card {
-            width: 900px;
+            width: min(900px, 100%);
             background: rgba(255,255,255,0.08);
             border: 1px solid rgba(255,255,255,0.15);
             backdrop-filter: blur(15px);
@@ -90,7 +84,7 @@
 
         @keyframes float {
             0% {
-                transform: translateY(0px);
+                transform: translateY(0);
             }
 
             50% {
@@ -98,7 +92,7 @@
             }
 
             100% {
-                transform: translateY(0px);
+                transform: translateY(0);
             }
         }
 
@@ -109,14 +103,14 @@
             align-items: center;
         }
 
-            .avatar img {
-                width: 280px;
-                height: 280px;
-                object-fit: cover;
-                border-radius: 50%;
-                border: 5px solid rgba(255,255,255,0.3);
-                box-shadow: 0 0 25px #ff9ff3;
-            }
+        .avatar img {
+            width: 280px;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 5px solid rgba(255,255,255,0.3);
+            box-shadow: 0 0 25px #ff9ff3;
+        }
 
         .content {
             flex: 1.5;
@@ -132,20 +126,20 @@
             border-radius: 30px;
             margin-bottom: 20px;
             width: max-content;
+            max-width: 100%;
             font-size: 14px;
         }
 
         h1 {
-  font-size: 52px;
-  margin-bottom: 15px;
-  background: linear-gradient(to right, #ffd6ff, #c8b6ff);
-
-  background-clip: text;
-  -webkit-background-clip: text;
-
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-}
+            font-size: 52px;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #ffd6ff, #c8b6ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.18;
+        }
 
         .subtitle {
             color: #d6d6ff;
@@ -180,21 +174,9 @@
             box-shadow: 0 0 20px rgba(255,118,136,0.4);
         }
 
-            .btn-primary:hover {
-                transform: translateY(-3px) scale(1.03);
-            }
-
-        .btn-secondary {
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.2);
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.03);
         }
-
-            .btn-secondary:hover {
-                background: rgba(255,255,255,0.2);
-            }
-
-        /* 技能 */
 
         .skills {
             margin-top: 30px;
@@ -211,12 +193,90 @@
             transition: 0.3s;
         }
 
-            .skill:hover {
-                background: #ff9df5;
-                transform: scale(1.05);
-            }
+        .skill:hover {
+            background: #ff9df5;
+            transform: scale(1.05);
+        }
 
-        /* 页脚 */
+        .modal {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(5, 6, 20, 0.68);
+            backdrop-filter: blur(8px);
+        }
+
+        .modal.is-open {
+            display: flex;
+        }
+
+        .modal-panel {
+            width: min(460px, 100%);
+            position: relative;
+            background: rgba(24, 20, 48, 0.94);
+            border: 1px solid rgba(255,255,255,0.16);
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 24px 70px rgba(0,0,0,0.4);
+        }
+
+        .modal-panel h2 {
+            font-size: 26px;
+            margin-bottom: 18px;
+            color: #ffd6ff;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 34px;
+            height: 34px;
+            border: 1px solid rgba(255,255,255,0.16);
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            color: white;
+            cursor: pointer;
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        .contact-list {
+            display: grid;
+            gap: 12px;
+            color: #f4efff;
+            line-height: 1.6;
+        }
+
+        .contact-list span {
+            color: #ffb6ff;
+            font-weight: 700;
+        }
+
+        .project-links {
+            display: grid;
+            gap: 14px;
+        }
+
+        .project-links a {
+            display: block;
+            padding: 14px 18px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: white;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .project-links a:hover {
+            background: linear-gradient(45deg,#ff7eb3,#ff758c);
+            transform: translateY(-2px);
+        }
 
         footer {
             text-align: center;
@@ -225,22 +285,30 @@
             background: rgba(0,0,0,0.3);
         }
 
-        /* 手机适配 */
-
         @media(max-width:900px) {
-
             nav {
-                padding: 20px;
+                padding: 18px 20px;
+                align-items: flex-start;
+                gap: 16px;
+                flex-direction: column;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            .menu {
+                gap: 18px;
+                flex-wrap: wrap;
             }
 
             .card {
                 flex-direction: column;
-                width: 100%;
-                padding: 35px;
+                padding: 34px 24px;
             }
 
             h1 {
-                font-size: 40px;
+                font-size: 38px;
             }
 
             .avatar img {
@@ -252,10 +320,8 @@
 </head>
 
 <body>
-
-    <!-- 导航栏 -->
     <nav>
-        <div class="logo">✦ Ayanami ✦</div>
+        <div class="logo">欢迎来到“桜小路秋玌”的个人网站</div>
 
         <div class="menu">
             <a href="#">首页</a>
@@ -265,77 +331,123 @@
         </div>
     </nav>
 
-    <!-- 主界面 -->
     <section class="hero">
-
         <div class="card">
-
-            <!-- 头像 -->
             <div class="avatar">
-                <img src="https://i.imgur.com/2DhmtJ4.jpeg" alt="头像">
+                <img src="https://img.cdn1.vip/i/6a0b1e46e4804_1779113542.webp" alt="桜小路秋玌头像">
             </div>
 
-            <!-- 内容 -->
             <div class="content">
-
                 <div class="tag">
-                    二次元 / 开发者 / 学生
+                    计算机专业 / 游戏开发 / ACG
                 </div>
 
                 <h1>
-                    你好，我是 Ayanami
+                    你好，我是桜小路秋玌
                 </h1>
 
                 <div class="subtitle">
-                    热爱编程与ACG文化 ✨
+                    热爱软件编程与游戏开发
                 </div>
 
                 <div class="desc">
-                    我是一名正在学习计算机技术的大学生，
-                    喜欢数据结构、前端开发以及二次元文化。
-                    目前正在制作属于自己的个人项目与网站。
+                    我是一名计算机专业的大学生，今年20岁，来自北京。喜欢软件编程，游戏开发。兴趣有ACG、玩游戏、逛漫展、旅游。在学校做过动漫社社长。目前在找实习。
                 </div>
 
-                <!-- 按钮 -->
                 <div class="buttons">
-
-                    <button class="btn btn-primary" onclick="showMessage()">
+                    <button class="btn btn-primary" type="button" data-modal-target="contactModal">
                         联系我
                     </button>
 
-                    <button class="btn btn-secondary">
+                    <button class="btn btn-primary" type="button" data-modal-target="projectModal">
                         查看项目
                     </button>
-
                 </div>
 
-                <!-- 技能 -->
                 <div class="skills">
-                    <div class="skill">HTML</div>
-                    <div class="skill">CSS</div>
-                    <div class="skill">JavaScript</div>
+                    <div class="skill">codex</div>
+                    <div class="skill">chatgpt</div>
+                    <div class="skill">python</div>
                     <div class="skill">C语言</div>
-                    <div class="skill">数据结构</div>
-                    <div class="skill">React</div>
+                    <div class="skill">java</div>
+                    <div class="skill">html</div>
+                    <div class="skill">css</div>
+                    <div class="skill">js</div>
+                    <div class="skill">mysql</div>
+                    <div class="skill">unity引擎</div>
+                    <div class="skill">office软件</div>
+                    <div class="skill">xmind</div>
                 </div>
-
             </div>
-
         </div>
-
     </section>
 
+    <div class="modal" id="contactModal" aria-hidden="true">
+        <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
+            <button class="modal-close" type="button" data-modal-close aria-label="关闭弹窗">×</button>
+            <h2 id="contactTitle">联系我</h2>
+            <div class="contact-list">
+                <p><span>邮箱：</span>qq759104902@gmail.com，759104902@qq.com</p>
+                <p><span>手机号：</span>18510684754</p>
+                <p><span>QQ：</span>759104902</p>
+                <p><span>微信：</span>18510684754</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="projectModal" aria-hidden="true">
+        <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="projectTitle">
+            <button class="modal-close" type="button" data-modal-close aria-label="关闭弹窗">×</button>
+            <h2 id="projectTitle">项目与主页</h2>
+            <div class="project-links">
+                <a href="https://space.bilibili.com/325346133?spm_id_from=333.337.0.0" target="_blank" rel="noopener noreferrer">B站主页</a>
+                <a href="https://github.com/qiu233333" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="https://www.bilibili.com/video/BV1qV6FYvErQ/?spm_id_from=333.1387.homepage.video_card.click&amp;vd_source=b29205ff210c7458ec4b1c0279093a08" target="_blank" rel="noopener noreferrer">活动统筹</a>
+            </div>
+        </div>
+    </div>
+
     <footer>
-        © 2026 Ayanami | 二次元个人网站
+        © 2026 桜小路秋玌 | 个人网站
     </footer>
 
     <script>
+        const openButtons = document.querySelectorAll("[data-modal-target]");
+        const closeButtons = document.querySelectorAll("[data-modal-close]");
 
-        function showMessage(){
-        alert("邮箱：your_email@qq.com");
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            if (!modal) return;
+            modal.classList.add("is-open");
+            modal.setAttribute("aria-hidden", "false");
         }
 
-    </script>
+        function closeModal(modal) {
+            modal.classList.remove("is-open");
+            modal.setAttribute("aria-hidden", "true");
+        }
 
+        openButtons.forEach((button) => {
+            button.addEventListener("click", () => openModal(button.dataset.modalTarget));
+        });
+
+        closeButtons.forEach((button) => {
+            button.addEventListener("click", () => closeModal(button.closest(".modal")));
+        });
+
+        document.querySelectorAll(".modal").forEach((modal) => {
+            modal.addEventListener("click", (event) => {
+                if (event.target === modal) {
+                    closeModal(modal);
+                }
+            });
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                document.querySelectorAll(".modal.is-open").forEach(closeModal);
+            }
+        });
+    </script>
 </body>
 </html>
