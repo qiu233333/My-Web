@@ -13,14 +13,42 @@
             box-sizing: border-box;
         }
 
+        html {
+            cursor: url("./鼠标指针/arrow.cur"), url("./鼠标指针/arrow.ani"), auto;
+        }
+
         body {
             font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
-            background: linear-gradient(rgba(10,10,30,0.75),rgba(10,10,30,0.75)), url("https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1600&auto=format&fit=crop");
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            background: #09091d;
             color: white;
             overflow-x: hidden;
+            cursor: url("./鼠标指针/arrow.cur"), url("./鼠标指针/arrow.ani"), auto;
+        }
+
+        a,
+        button,
+        input[type="range"] {
+            cursor: url("./鼠标指针/link.cur"), url("./鼠标指针/link.ani"), pointer;
+        }
+
+        /* 背景视频保持固定，文字上方再加暗色遮罩，避免看不清。 */
+        .background-video {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+
+        .background-mask {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background:
+                radial-gradient(circle at top, rgba(255, 166, 214, 0.18), transparent 34%),
+                linear-gradient(rgba(10,10,30,0.68), rgba(10,10,30,0.84));
+            pointer-events: none;
         }
 
         nav {
@@ -163,7 +191,7 @@
             padding: 14px 28px;
             border: none;
             border-radius: 50px;
-            cursor: pointer;
+            cursor: url("./鼠标指针/link.cur"), url("./鼠标指针/link.ani"), pointer;
             font-size: 16px;
             transition: 0.3s;
         }
@@ -240,7 +268,7 @@
             border-radius: 50%;
             background: rgba(255,255,255,0.08);
             color: white;
-            cursor: pointer;
+            cursor: url("./鼠标指针/link.cur"), url("./鼠标指针/link.ani"), pointer;
             font-size: 22px;
             line-height: 1;
         }
@@ -276,6 +304,184 @@
         .project-links a:hover {
             background: linear-gradient(45deg,#ff7eb3,#ff758c);
             transform: translateY(-2px);
+        }
+
+        .music-player {
+            position: fixed;
+            left: 24px;
+            bottom: 24px;
+            z-index: 900;
+            width: min(420px, calc(100% - 48px));
+            min-height: 140px;
+            padding: 16px;
+            border: 1px solid rgba(255,255,255,0.16);
+            border-radius: 18px;
+            background: rgba(3, 17, 30, 0.82);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 18px 50px rgba(0,0,0,0.32), 0 0 24px rgba(91, 205, 255, 0.14);
+            display: grid;
+            grid-template-columns: 104px 1fr;
+            gap: 14px;
+        }
+
+        .music-cover {
+            width: 104px;
+            height: 104px;
+            border-radius: 10px;
+            object-fit: cover;
+            box-shadow: 0 0 18px rgba(255,255,255,0.18);
+        }
+
+        .music-main {
+            min-width: 0;
+        }
+
+        .music-top {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: start;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .music-title {
+            display: block;
+            color: #fff;
+            max-width: 170px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 18px;
+            line-height: 1.2;
+        }
+
+        .music-time {
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .music-button {
+            width: 34px;
+            height: 34px;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.78);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .music-button:hover {
+            background: rgba(255,255,255,0.16);
+            transform: translateY(-2px);
+        }
+
+        .music-actions {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin: 8px 0;
+        }
+
+        .volume-wrap {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .volume-wrap:hover .volume-row,
+        .volume-wrap:focus-within .volume-row {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .list-button {
+            margin-left: auto;
+        }
+
+        .arrow-button {
+            border: none;
+            font-size: 26px;
+            line-height: 1;
+        }
+
+        .volume-row {
+            position: absolute;
+            left: 0;
+            bottom: 42px;
+            width: 130px;
+            padding: 10px;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            background: rgba(3, 17, 30, 0.94);
+            opacity: 0;
+            transform: translateY(8px);
+            pointer-events: none;
+            transition: 0.3s;
+        }
+
+        .progress-row {
+            display: block;
+        }
+
+        .time-row {
+            display: none;
+        }
+
+        .music-range {
+            width: 100%;
+            height: 8px;
+            accent-color: white;
+        }
+
+        .song-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .song-item {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 14px;
+            color: white;
+            text-align: left;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .song-item.is-current {
+            background: linear-gradient(45deg,#ff7eb3,#ff758c);
+        }
+
+        .sakura-trail {
+            position: fixed;
+            z-index: 1200;
+            color: #ffd1ea;
+            pointer-events: none;
+            user-select: none;
+            font-size: 18px;
+            line-height: 1;
+            text-shadow: 0 0 8px rgba(255, 153, 214, 0.8);
+            animation: sakuraFall 900ms ease-out forwards;
+        }
+
+        @keyframes sakuraFall {
+            0% {
+                opacity: 0.95;
+                transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate3d(var(--petal-x), 58px, 0) rotate(150deg) scale(0.3);
+            }
         }
 
         footer {
@@ -315,11 +521,34 @@
                 width: 220px;
                 height: 220px;
             }
+
+            .music-player {
+                left: 14px;
+                bottom: 14px;
+                width: calc(100% - 28px);
+                min-height: 120px;
+                padding: 14px;
+                grid-template-columns: 82px 1fr;
+            }
+
+            .music-cover {
+                width: 82px;
+                height: 82px;
+            }
+
+            .music-actions {
+                gap: 10px;
+            }
         }
     </style>
 </head>
 
 <body>
+    <video class="background-video" autoplay muted loop playsinline>
+        <source src="背景视频.mp4" type="video/mp4">
+    </video>
+    <div class="background-mask"></div>
+
     <nav>
         <div class="logo">欢迎来到“桜小路秋玌”的个人网站</div>
 
@@ -351,7 +580,7 @@
                 </div>
 
                 <div class="desc">
-                    我是一名计算机专业的大学生，今年20岁，来自北京。喜欢软件编程，游戏开发。兴趣有ACG、玩游戏、逛漫展、旅游。在学校做过动漫社社长。目前在找实习。
+                    我是一名计算机专业的大学生，今年20岁，来自北京。喜欢软件编程，游戏开发。兴趣有ACG、玩游戏、逛漫展、旅游。在学校做过动漫社社长。目前在找实习，希望您能给我一次机会。
                 </div>
 
                 <div class="buttons">
@@ -400,12 +629,51 @@
             <button class="modal-close" type="button" data-modal-close aria-label="关闭弹窗">×</button>
             <h2 id="projectTitle">项目与主页</h2>
             <div class="project-links">
-                <a href="https://space.bilibili.com/325346133?spm_id_from=333.337.0.0" target="_blank" rel="noopener noreferrer">B站主页</a>
+                <a href="https://space.bilibili.com/325346133?spm_id_from=333.337.0.0" target="_blank" rel="noopener noreferrer">B站主页（演示视频）</a>
                 <a href="https://github.com/qiu233333" target="_blank" rel="noopener noreferrer">GitHub</a>
-                <a href="https://www.bilibili.com/video/BV1qV6FYvErQ/?spm_id_from=333.1387.homepage.video_card.click&amp;vd_source=b29205ff210c7458ec4b1c0279093a08" target="_blank" rel="noopener noreferrer">活动统筹</a>
+                <a href="https://www.bilibili.com/video/BV1qV6FYvErQ/?spm_id_from=333.1387.homepage.video_card.click&amp;vd_source=b29205ff210c7458ec4b1c0279093a08" target="_blank" rel="noopener noreferrer">统筹活动</a>
             </div>
         </div>
     </div>
+
+    <div class="modal" id="musicModal" aria-hidden="true">
+        <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="musicListTitle">
+            <button class="modal-close" type="button" data-modal-close aria-label="关闭弹窗">×</button>
+            <h2 id="musicListTitle">歌曲全览</h2>
+            <div class="song-list" id="songList"></div>
+        </div>
+    </div>
+
+    <section class="music-player" aria-label="背景音乐播放器">
+        <audio id="backgroundMusic" preload="auto" autoplay></audio>
+
+        <img class="music-cover" src="https://img.cdn1.vip/i/6a0b1e46e4804_1779113542.webp" alt="音乐封面">
+
+        <div class="music-main">
+            <div class="music-top">
+                <strong class="music-title" id="musicTitle">太阳照亮了樱小路</strong>
+                <span class="music-time"><span id="currentTime">00:00</span>/<span id="totalTime">00:00</span></span>
+            </div>
+
+            <div class="music-actions">
+                <div class="volume-wrap">
+                    <button class="music-button" type="button" aria-label="调整音量">♪</button>
+                    <div class="volume-row">
+                        <input class="music-range" id="volumeControl" type="range" min="0" max="1" step="0.01" value="0.55" aria-label="音乐音量">
+                    </div>
+                </div>
+
+                <button class="music-button" id="prevSongButton" type="button" aria-label="上一首">◁</button>
+                <button class="music-button" id="playPauseButton" type="button" aria-label="播放或暂停音乐">▶</button>
+                <button class="music-button" id="nextSongButton" type="button" aria-label="下一首">▷</button>
+                <button class="music-button arrow-button list-button" type="button" data-modal-target="musicModal" aria-label="歌曲全览">→</button>
+            </div>
+
+            <div class="progress-row">
+                <input class="music-range" id="musicProgress" type="range" min="0" max="100" value="0" aria-label="音乐进度">
+            </div>
+        </div>
+    </section>
 
     <footer>
         © 2026 桜小路秋玌 | 个人网站
@@ -414,6 +682,25 @@
     <script>
         const openButtons = document.querySelectorAll("[data-modal-target]");
         const closeButtons = document.querySelectorAll("[data-modal-close]");
+        const songList = [
+            {
+                name: "太阳照亮了樱小路",
+                src: "背景音乐/太阳照亮了樱小路.mp3"
+            }
+        ];
+        const audio = document.getElementById("backgroundMusic");
+        const musicTitle = document.getElementById("musicTitle");
+        const playPauseButton = document.getElementById("playPauseButton");
+        const prevSongButton = document.getElementById("prevSongButton");
+        const nextSongButton = document.getElementById("nextSongButton");
+        const musicProgress = document.getElementById("musicProgress");
+        const volumeControl = document.getElementById("volumeControl");
+        const currentTime = document.getElementById("currentTime");
+        const totalTime = document.getElementById("totalTime");
+        const songListBox = document.getElementById("songList");
+        let currentSongIndex = 0;
+        let isDraggingProgress = false;
+        let lastTrailTime = 0;
 
         function openModal(id) {
             const modal = document.getElementById(id);
@@ -448,6 +735,125 @@
                 document.querySelectorAll(".modal.is-open").forEach(closeModal);
             }
         });
+
+        function formatTime(seconds) {
+            if (!Number.isFinite(seconds)) return "00:00";
+            const minute = Math.floor(seconds / 60).toString().padStart(2, "0");
+            const second = Math.floor(seconds % 60).toString().padStart(2, "0");
+            return `${minute}:${second}`;
+        }
+
+        function updateMusicButton() {
+            playPauseButton.textContent = audio.paused ? "▶" : "Ⅱ";
+        }
+
+        function loadSong(index, shouldPlay = false) {
+            currentSongIndex = (index + songList.length) % songList.length;
+            const song = songList[currentSongIndex];
+            audio.src = song.src;
+            musicTitle.textContent = song.name;
+            musicProgress.value = 0;
+            currentTime.textContent = "00:00";
+            refreshSongList();
+
+            if (shouldPlay) {
+                audio.play().catch(updateMusicButton);
+            }
+        }
+
+        function playCurrentSong() {
+            audio.play().then(updateMusicButton).catch(updateMusicButton);
+        }
+
+        function toggleMusic() {
+            if (audio.paused) {
+                playCurrentSong();
+            } else {
+                audio.pause();
+                updateMusicButton();
+            }
+        }
+
+        function refreshSongList() {
+            songListBox.innerHTML = "";
+
+            songList.forEach((song, index) => {
+                const songButton = document.createElement("button");
+                songButton.type = "button";
+                songButton.className = `song-item${index === currentSongIndex ? " is-current" : ""}`;
+                songButton.textContent = song.name;
+                songButton.addEventListener("click", () => {
+                    loadSong(index, true);
+                    closeModal(document.getElementById("musicModal"));
+                });
+                songListBox.appendChild(songButton);
+            });
+        }
+
+        playPauseButton.addEventListener("click", toggleMusic);
+
+        prevSongButton.addEventListener("click", () => {
+            loadSong(currentSongIndex - 1, true);
+        });
+
+        nextSongButton.addEventListener("click", () => {
+            loadSong(currentSongIndex + 1, true);
+        });
+
+        volumeControl.addEventListener("input", () => {
+            audio.volume = Number(volumeControl.value);
+        });
+
+        musicProgress.addEventListener("input", () => {
+            isDraggingProgress = true;
+        });
+
+        musicProgress.addEventListener("change", () => {
+            if (Number.isFinite(audio.duration)) {
+                audio.currentTime = (Number(musicProgress.value) / 100) * audio.duration;
+            }
+            isDraggingProgress = false;
+        });
+
+        audio.addEventListener("loadedmetadata", () => {
+            totalTime.textContent = formatTime(audio.duration);
+        });
+
+        audio.addEventListener("timeupdate", () => {
+            currentTime.textContent = formatTime(audio.currentTime);
+
+            if (!isDraggingProgress && Number.isFinite(audio.duration) && audio.duration > 0) {
+                musicProgress.value = (audio.currentTime / audio.duration) * 100;
+            }
+        });
+
+        audio.addEventListener("play", updateMusicButton);
+        audio.addEventListener("pause", updateMusicButton);
+        audio.addEventListener("ended", () => loadSong(currentSongIndex + 1, true));
+
+        // 光标移动时生成一片小樱花，并让它自然下落消失。
+        document.addEventListener("pointermove", (event) => {
+            const now = Date.now();
+            if (now - lastTrailTime < 45) return;
+            lastTrailTime = now;
+
+            const petal = document.createElement("span");
+            petal.className = "sakura-trail";
+            petal.textContent = Math.random() > 0.5 ? "桜" : "✿";
+            petal.style.left = `${event.clientX}px`;
+            petal.style.top = `${event.clientY}px`;
+            petal.style.setProperty("--petal-x", `${Math.random() * 50 - 25}px`);
+            document.body.appendChild(petal);
+
+            window.setTimeout(() => {
+                petal.remove();
+            }, 900);
+        });
+
+        audio.volume = Number(volumeControl.value);
+        audio.autoplay = true;
+        loadSong(0, true);
+        window.addEventListener("load", playCurrentSong);
     </script>
 </body>
 </html>
