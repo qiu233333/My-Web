@@ -562,54 +562,109 @@
   box-shadow: 0 0 20px rgba(255, 150, 230, 0.35);
 }
 
-.pet-head {
-  width: 160px;
-  height: 160px;
-  margin: auto;
-  border-radius: 50%;
-  background: linear-gradient(145deg, #ffd6ff, #b8c0ff);
+.pet {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.speech {
+  width: 260px;
+  min-height: 56px;
+  max-height: 130px;
+  overflow-y: auto;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  border-radius: 18px;
+  background: rgba(24, 20, 48, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(14px);
+  color: white;
+  line-height: 1.6;
+  box-shadow: 0 0 24px rgba(255, 150, 230, 0.35);
+}
+
+.pet-stage {
+  width: 240px;
+  height: 340px;
   position: relative;
+  animation: petFloat 3.2s ease-in-out infinite;
+  transform-style: preserve-3d;
+  filter: drop-shadow(0 0 22px rgba(255, 160, 240, 0.45));
+}
+
+.pet-character {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none;
   transition: transform 0.12s ease-out;
-  box-shadow: 0 0 30px rgba(255, 160, 240, 0.7);
+  transform-origin: 50% 45%;
 }
 
-.eye {
-  width: 34px;
-  height: 34px;
-  background: white;
-  border-radius: 50%;
-  position: absolute;
-  top: 55px;
-  overflow: hidden;
+.chat-box {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
 }
 
-.left-eye {
-  left: 38px;
+.chat-box input {
+  width: 190px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: none;
+  outline: none;
+  background: rgba(255, 255, 255, 0.92);
 }
 
-.right-eye {
-  right: 38px;
+.chat-box button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(45deg, #ff7eb3, #a18cd1);
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 0 18px rgba(255, 126, 179, 0.35);
 }
 
-.pupil {
-  width: 15px;
-  height: 15px;
-  background: #5b2cff;
-  border-radius: 50%;
-  position: absolute;
-  left: 9px;
-  top: 9px;
-  transition: transform 0.08s linear;
+@keyframes petFloat {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
 }
 
-.mouth {
-  width: 36px;
-  height: 18px;
-  border-bottom: 4px solid #7b2cbf;
-  border-radius: 0 0 40px 40px;
-  position: absolute;
-  left: 62px;
-  top: 100px;
+@media (max-width: 900px) {
+  .pet {
+    right: 12px;
+    bottom: 12px;
+  }
+
+  .pet-stage {
+    width: 185px;
+    height: 260px;
+  }
+
+  .speech {
+    width: 220px;
+    font-size: 14px;
+  }
+
+  .chat-box input {
+    width: 145px;
+  }
 }
 
 .chat-box {
@@ -755,7 +810,7 @@
                 <div class="volume-wrap">
                     <button class="music-button" type="button" aria-label="调整音量">♪</button>
                     <div class="volume-row">
-                        <input class="music-range" id="volumeControl" type="range" min="0" max="1" step="0.01" value="0.55" aria-label="音乐音量">
+                        <input class="music-range" id="volumeControl" type="range" min="0" max="1" step="0.01" value="0.20" aria-label="音乐音量">
                     </div>
                 </div>
 
@@ -776,20 +831,19 @@
     </footer>
 
         <div class="pet">
-  <div class="speech" id="speech">你好呀，我是你的桌宠 ✨</div>
+  <div class="speech" id="speech">你好呀，我是Ayanami~（已接入seepseek） ✨</div>
 
-  <div class="pet-head" id="petHead">
-    <div class="eye left-eye">
-      <div class="pupil"></div>
-    </div>
-    <div class="eye right-eye">
-      <div class="pupil"></div>
-    </div>
-    <div class="mouth"></div>
+  <div class="pet-stage" id="petStage">
+    <img
+      class="pet-character"
+      id="petCharacter"
+      src="pet/pet.png"
+      alt="桌宠角色"
+    />
   </div>
 
   <div class="chat-box">
-    <input id="userInput" placeholder="和桌宠说点什么..." />
+    <input id="userInput" placeholder="和我说点什么..." />
     <button onclick="sendMessage()">发送</button>
   </div>
 </div>
@@ -1004,28 +1058,20 @@
     </script>
 
 <script>
-const petHead = document.getElementById("petHead");
-const pupils = document.querySelectorAll(".pupil");
+const petCharacter = document.getElementById("petCharacter");
 const speech = document.getElementById("speech");
 
-document.addEventListener("mousemove", (e) => {
-  if (!petHead) return;
+document.addEventListener("mousemove", (event) => {
+  if (!petCharacter) return;
 
-  const rect = petHead.getBoundingClientRect();
-  const petX = rect.left + rect.width / 2;
-  const petY = rect.top + rect.height / 2;
+  const x = (event.clientX / window.innerWidth - 0.5) * 18;
+  const y = (event.clientY / window.innerHeight - 0.5) * 12;
 
-  const dx = e.clientX - petX;
-  const dy = e.clientY - petY;
-
-  const angleX = Math.max(-12, Math.min(12, dx / 35));
-  const angleY = Math.max(-10, Math.min(10, dy / 35));
-
-  petHead.style.transform = `rotateY(${angleX}deg) rotateX(${-angleY}deg)`;
-
-  pupils.forEach((pupil) => {
-    pupil.style.transform = `translate(${angleX}px, ${angleY}px)`;
-  });
+  petCharacter.style.transform = `
+    rotateY(${x}deg)
+    rotateX(${-y}deg)
+    translate(${x * 0.35}px, ${y * 0.35}px)
+  `;
 });
 
 async function sendMessage() {
@@ -1038,24 +1084,23 @@ async function sendMessage() {
   input.value = "";
 
   try {
- const res = await fetch("https://my-web-backend-six.vercel.app/api/chat", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    message: text
-  })
-});
+    const res = await fetch("https://my-web-backend-six.vercel.app/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: text
+      })
+    });
 
     const data = await res.json();
 
     speech.textContent = data.reply;
-
     speak(data.reply);
   } catch (err) {
     console.error(err);
-    speech.textContent = "连接后端失败了，检查一下 server.js 有没有启动。";
+    speech.textContent = "连接线上后端失败，请稍后再试。";
   }
 }
 
@@ -1064,12 +1109,13 @@ function speak(text) {
 
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = "zh-CN";
-  utterance.rate = 1;
-  utterance.pitch = 1.15;
+  utterance.rate = 1.08;
+  utterance.pitch = 1.35;
+  utterance.volume = 1;
 
   speechSynthesis.speak(utterance);
 }
-</script>
 
+</script>
 </body>
 </html>
