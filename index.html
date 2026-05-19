@@ -308,6 +308,33 @@
             transform: translateY(-2px);
         }
 
+        .side-nav-button {
+            position: fixed;
+            left: 24px;
+            top: 50%;
+            z-index: 920;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 176px;
+            padding: 14px 22px;
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 999px;
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+            background: linear-gradient(45deg, rgba(255,126,179,0.86), rgba(161,140,209,0.86));
+            backdrop-filter: blur(14px);
+            box-shadow: 0 0 22px rgba(255,126,179,0.32);
+            transform: translateY(-50%);
+            transition: 0.3s;
+        }
+
+        .side-nav-button:hover {
+            transform: translateY(-50%) translateX(6px);
+            box-shadow: 0 0 30px rgba(255,126,179,0.48);
+        }
+
         .music-player {
             position: fixed;
             left: 24px;
@@ -541,6 +568,19 @@
             .music-actions {
                 gap: 10px;
             }
+
+            .side-nav-button {
+                left: 14px;
+                top: auto;
+                bottom: 154px;
+                min-width: 150px;
+                padding: 12px 18px;
+                transform: none;
+            }
+
+            .side-nav-button:hover {
+                transform: translateX(4px);
+            }
         }
         .pet {
   position: fixed;
@@ -699,6 +739,10 @@
         <source src="背景视频.mp4" type="video/mp4">
     </video>
     <div class="background-mask"></div>
+
+    <a class="side-nav-button" href="https://qiu233333.github.io/QiuGuidance/" target="_blank" rel="noopener noreferrer">
+        我的导航页
+    </a>
 
     <nav>
         <div class="logo">欢迎来到“桜小路秋玌”的个人网站</div>
