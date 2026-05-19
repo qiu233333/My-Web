@@ -1094,13 +1094,17 @@ async function sendMessage() {
       })
     });
 
+    if (!res.ok) {
+      throw new Error("HTTP " + res.status);
+    }
+
     const data = await res.json();
 
-    speech.textContent = data.reply;
+    speech.textContent = data.reply || "后端返回了空内容。";
     speak(data.reply);
   } catch (err) {
     console.error(err);
-    speech.textContent = "连接线上后端失败，请稍后再试。";
+    speech.textContent = "连接线上后端失败：" + err.message;
   }
 }
 
