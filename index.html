@@ -1083,6 +1083,11 @@ async function sendMessage() {
   speech.textContent = "思考中...";
   input.value = "";
 
+  const controller = new AbortController();
+  const timer = setTimeout(() => {
+    controller.abort();
+  }, 20000); // 20秒超时
+
   try {
     const res = await fetch("https://my-web-backend-six.vercel.app/api/chat", {
       method: "POST",
@@ -1091,20 +1096,33 @@ async function sendMessage() {
       },
       body: JSON.stringify({
         message: text
-      })
+      }),
+      signal: controller.signal
     });
 
-    if (!res.ok) {
-      throw new Error("HTTP " + res.status);
-    }
+    clearTimeout(timer);
 
     const data = await res.json();
 
-    speech.textContent = data.reply || "后端返回了空内容。";
+    if (!res.ok) {
+      throw new Error(data.error || data.detail || "HTTP " + res.status);
+    }
+
+    if (!data.reply) {
+      throw new Error("后端没有返回 reply");
+    }
+
+    speech.textContent = data.reply;
     speak(data.reply);
   } catch (err) {
+    clearTimeout(timer);
     console.error(err);
-    speech.textContent = "连接线上后端失败：" + err.message;
+
+    if (err.name === "AbortError") {
+      speech.textContent = "请求超时了，手机网络可能连 DeepSeek 或 Vercel 太慢。";
+    } else {
+      speech.textContent = "连接线上后端失败：" + err.message;
+    }
   }
 }
 
