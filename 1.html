@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>人生足迹 | 桜小路秋玌</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: #09091d;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .background-video {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+
+        .background-mask {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background:
+                radial-gradient(circle at top, rgba(255, 166, 214, 0.2), transparent 34%),
+                linear-gradient(rgba(10,10,30,0.72), rgba(10,10,30,0.92));
+            pointer-events: none;
+        }
+
+        nav {
+            width: 100%;
+            padding: 20px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 999;
+            backdrop-filter: blur(10px);
+            background: rgba(255,255,255,0.08);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffb6ff;
+            text-shadow: 0 0 10px #ff8ef2;
+        }
+
+        .menu {
+            display: flex;
+            gap: 28px;
+        }
+
+        .menu a {
+            color: white;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .menu a:hover {
+            color: #ff9df5;
+        }
+
+        .page {
+            width: min(1180px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 130px 0 70px;
+        }
+
+        .hero-title {
+            text-align: center;
+            margin-bottom: 38px;
+        }
+
+        .hero-title h1 {
+            font-size: 54px;
+            margin-bottom: 14px;
+            background: linear-gradient(to right, #ffd6ff, #c8b6ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-title p {
+            color: #d6d6ff;
+            font-size: 18px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            padding: 22px;
+            border-radius: 22px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.16);
+            backdrop-filter: blur(14px);
+            box-shadow: 0 0 24px rgba(255,105,180,0.16);
+            text-align: center;
+        }
+
+        .stat-card strong {
+            display: block;
+            font-size: 34px;
+            color: #ffd6ff;
+            margin-bottom: 8px;
+        }
+
+        .stat-card span {
+            color: #d6d6ff;
+        }
+
+        .footprint-map {
+            position: relative;
+            min-height: 420px;
+            margin-bottom: 36px;
+            border-radius: 30px;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(255, 166, 214, 0.18), transparent 30%),
+                radial-gradient(circle at 80% 70%, rgba(161, 140, 209, 0.2), transparent 34%),
+                rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.16);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 0 34px rgba(255,105,180,0.2);
+        }
+
+        .map-title {
+            position: absolute;
+            top: 24px;
+            left: 28px;
+            z-index: 2;
+        }
+
+        .map-title h2 {
+            color: #ffd6ff;
+            margin-bottom: 6px;
+        }
+
+        .map-title p {
+            color: #d6d6ff;
+            font-size: 14px;
+        }
+
+        .map-line {
+            position: absolute;
+            inset: 70px 40px 40px;
+            border-radius: 26px;
+            border: 1px dashed rgba(255,255,255,0.16);
+            background:
+                linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px),
+                linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+            background-size: 48px 48px;
+        }
+
+        .city-dot {
+            position: absolute;
+            left: var(--x);
+            top: var(--y);
+            transform: translate(-50%, -50%);
+            border: none;
+            background: transparent;
+            color: white;
+            cursor: pointer;
+            z-index: 3;
+        }
+
+        .city-dot::before {
+            content: "";
+            display: block;
+            width: 18px;
+            height: 18px;
+            margin: 0 auto 6px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff7eb3, #a18cd1);
+            box-shadow:
+                0 0 0 7px rgba(255,126,179,0.14),
+                0 0 24px rgba(255,126,179,0.8);
+            animation: pulse 1.8s infinite;
+        }
+
+        .city-dot span {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: rgba(9, 9, 29, 0.72);
+            border: 1px solid rgba(255,255,255,0.18);
+            backdrop-filter: blur(8px);
+            white-space: nowrap;
+            font-size: 13px;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.18);
+                opacity: 0.75;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .city-detail {
+            position: absolute;
+            right: 28px;
+            bottom: 28px;
+            width: min(360px, calc(100% - 56px));
+            padding: 22px;
+            border-radius: 22px;
+            background: rgba(9, 9, 29, 0.78);
+            border: 1px solid rgba(255,255,255,0.18);
+            backdrop-filter: blur(14px);
+            z-index: 4;
+        }
+
+        .city-detail h3 {
+            color: #ffd6ff;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .city-detail p {
+            color: #eee;
+            line-height: 1.7;
+            margin-bottom: 8px;
+        }
+
+        .city-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+            margin-bottom: 42px;
+        }
+
+        .city-card {
+            overflow: hidden;
+            border-radius: 24px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.16);
+            backdrop-filter: blur(14px);
+            box-shadow: 0 0 24px rgba(255,105,180,0.16);
+            transition: 0.3s;
+        }
+
+        .city-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 0 34px rgba(255,126,179,0.35);
+        }
+
+        .city-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .city-card-content {
+            padding: 20px;
+        }
+
+        .city-card h3 {
+            color: #ffd6ff;
+            margin-bottom: 8px;
+        }
+
+        .city-card p {
+            color: #eee;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.1);
+            color: #ffc8f4;
+            font-size: 13px;
+        }
+
+        .timeline {
+            padding: 30px;
+            border-radius: 24px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.16);
+            backdrop-filter: blur(14px);
+        }
+
+        .timeline h2 {
+            color: #ffd6ff;
+            margin-bottom: 20px;
+        }
+
+        .timeline-item {
+            padding: 18px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+
+        .timeline-item strong {
+            color: #ffb6ff;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #ccc;
+            background: rgba(0,0,0,0.3);
+        }
+
+        @media(max-width: 900px) {
+            nav {
+                padding: 18px 20px;
+                flex-direction: column;
+                gap: 14px;
+                align-items: flex-start;
+            }
+
+            .menu {
+                flex-wrap: wrap;
+                gap: 18px;
+            }
+
+            .hero-title h1 {
+                font-size: 38px;
+            }
+
+            .footprint-map {
+                min-height: 520px;
+            }
+
+            .city-detail {
+                position: absolute;
+                left: 20px;
+                right: 20px;
+                bottom: 20px;
+                width: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <video class="background-video" autoplay muted loop playsinline>
+        <source src="背景视频.mp4" type="video/mp4">
+    </video>
+    <div class="background-mask"></div>
+
+    <nav>
+        <div class="logo">桜小路秋玌的人生足迹</div>
+
+        <div class="menu">
+            <a href="index.html">首页</a>
+            <a href="games.html">游戏生涯</a>
+            <a href="footprints.html">人生足迹</a>
+        </div>
+    </nav>
+
+    <main class="page">
+        <section class="hero-title">
+            <h1>我的人生足迹</h1>
+            <p>把去过的城市、见过的风景、遇到的人，慢慢收藏起来。</p>
+        </section>
+
+        <section class="stats">
+            <div class="stat-card">
+                <strong id="cityCount">0</strong>
+                <span>去过的城市</span>
+            </div>
+            <div class="stat-card">
+                <strong id="provinceCount">0</strong>
+                <span>涉及地区</span>
+            </div>
+            <div class="stat-card">
+                <strong id="latestCity">-</strong>
+                <span>最近一次足迹</span>
+            </div>
+        </section>
+
+        <section class="footprint-map">
+            <div class="map-title">
+                <h2>足迹地图</h2>
+                <p>点击发光城市点，查看这座城市的记忆。</p>
+            </div>
+
+            <div class="map-line"></div>
+
+            <div id="cityDots"></div>
+
+            <div class="city-detail" id="cityDetail">
+                <h3>选择一座城市</h3>
+                <p>点击地图上的城市点，这里会显示对应的旅行记忆。</p>
+            </div>
+        </section>
+
+        <section class="city-grid" id="cityGrid"></section>
+
+        <section class="timeline">
+            <h2>足迹时间线</h2>
+
+            <div class="timeline-item">
+                <strong>2024：</strong>
+                开始认真记录自己的旅行和生活轨迹。
+            </div>
+
+            <div class="timeline-item">
+                <strong>2025：</strong>
+                去到更多城市，也开始把这些经历整理到个人网站里。
+            </div>
+
+            <div class="timeline-item">
+                <strong>未来：</strong>
+                想继续去更多地方，看更多风景，也留下更多故事。
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        © 2026 桜小路秋玌 | 人生足迹
+    </footer>
+
+    <script>
+        const cities = [
+            {
+                name: "北京",
+                area: "北京",
+                date: "长期生活",
+                image: "travel/beijing.jpg",
+                memory: "熟悉又重要的城市，很多学习、生活和成长的记忆都在这里。",
+                tags: ["生活", "学习", "成长"],
+                x: "58%",
+                y: "28%"
+            },
+            {
+                name: "上海",
+                area: "上海",
+                date: "2025",
+                image: "travel/shanghai.jpg",
+                memory: "高楼、夜景和城市节奏都很有冲击力，是很有现代感的地方。",
+                tags: ["城市", "夜景", "旅行"],
+                x: "68%",
+                y: "48%"
+            },
+            {
+                name: "东京",
+                area: "日本",
+                date: "2026",
+                image: "travel/tokyo.jpg",
+                memory: "ACG氛围很强的城市，街景、车站和店铺都很有二次元感。",
+                tags: ["日本", "ACG", "旅行"],
+                x: "82%",
+                y: "42%"
+            },
+            {
+                name: "大阪",
+                area: "日本",
+                date: "2026",
+                image: "travel/osaka.jpg",
+                memory: "热闹、好吃、很适合慢慢逛的城市。",
+                tags: ["美食", "日本", "街景"],
+                x: "78%",
+                y: "56%"
+            }
+        ];
+
+        const cityDots = document.getElementById("cityDots");
+        const cityGrid = document.getElementById("cityGrid");
+        const cityDetail = document.getElementById("cityDetail");
+
+        document.getElementById("cityCount").textContent = cities.length;
+
+        const areas = new Set(cities.map(city => city.area));
+        document.getElementById("provinceCount").textContent = areas.size;
+
+        document.getElementById("latestCity").textContent = cities[cities.length - 1].name;
+
+        function showCityDetail(city) {
+            cityDetail.innerHTML = `
+                <h3>${city.name}</h3>
+                <p><strong>时间：</strong>${city.date}</p>
+                <p><strong>地区：</strong>${city.area}</p>
+                <p>${city.memory}</p>
+            `;
+        }
+
+        cities.forEach((city) => {
+            const dot = document.createElement("button");
+            dot.className = "city-dot";
+            dot.style.setProperty("--x", city.x);
+            dot.style.setProperty("--y", city.y);
+            dot.innerHTML = `<span>${city.name}</span>`;
+            dot.addEventListener("click", () => showCityDetail(city));
+            cityDots.appendChild(dot);
+
+            const card = document.createElement("article");
+            card.className = "city-card";
+            card.innerHTML = `
+                <img src="${city.image}" alt="${city.name}">
+                <div class="city-card-content">
+                    <h3>${city.name}</h3>
+                    <p><strong>${city.date}</strong>｜${city.area}</p>
+                    <p>${city.memory}</p>
+                    <div class="tags">
+                        ${city.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}
+                    </div>
+                </div>
+            `;
+            cityGrid.appendChild(card);
+        });
+
+        showCityDetail(cities[0]);
+    </script>
+</body>
+</html>

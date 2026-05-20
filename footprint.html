@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>人生足迹相册</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --page-bg: #07131b;
+            --glass-bg: rgba(8, 23, 34, 0.72);
+            --glass-border: rgba(171, 241, 255, 0.22);
+            --text-main: #f8fdff;
+            --text-soft: #cbe8ee;
+            --text-muted: #86aeb9;
+            --cyan: #72f3ff;
+            --pink: #ff9bd8;
+            --gold: #ffd68c;
+        }
+
+        html {
+            cursor: url("./鼠标指针/arrow.cur"), url("./鼠标指针/arrow.ani"), auto;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+            color: var(--text-main);
+            background:
+                linear-gradient(135deg, rgba(5, 20, 27, 0.95), rgba(12, 17, 37, 0.94)),
+                var(--page-bg);
+            overflow-x: hidden;
+            cursor: url("./鼠标指针/arrow.cur"), url("./鼠标指针/arrow.ani"), auto;
+        }
+
+        a,
+        button {
+            cursor: url("./鼠标指针/link.cur"), url("./鼠标指针/link.ani"), pointer;
+        }
+
+        button {
+            border: 0;
+            color: inherit;
+            font: inherit;
+        }
+
+        .background-video {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -3;
+            opacity: 0.34;
+        }
+
+        .background-mask {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 72% 0%, rgba(114, 243, 255, 0.2), transparent 32%),
+                radial-gradient(circle at 12% 18%, rgba(255, 155, 216, 0.16), transparent 28%),
+                linear-gradient(180deg, rgba(4, 15, 23, 0.58), rgba(4, 12, 18, 0.9));
+        }
+
+        .page-shell {
+            position: relative;
+            width: min(1240px, calc(100% - 40px));
+            min-height: 100vh;
+            margin: 0 auto;
+            padding: 28px 0 64px;
+        }
+
+        .page-shell::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.16;
+            background-image:
+                linear-gradient(rgba(142, 241, 255, 0.14) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(142, 241, 255, 0.1) 1px, transparent 1px);
+            background-size: 74px 74px;
+            mask-image: linear-gradient(180deg, transparent, #000 15%, #000 86%, transparent);
+        }
+
+        .topbar {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        .brand h1 {
+            font-size: clamp(34px, 5vw, 58px);
+            line-height: 1.08;
+            text-shadow:
+                0 0 20px rgba(114, 243, 255, 0.28),
+                0 0 30px rgba(255, 155, 216, 0.16);
+        }
+
+        .brand p {
+            max-width: 690px;
+            margin-top: 8px;
+            color: var(--text-soft);
+            line-height: 1.8;
+        }
+
+        .nav-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 42px;
+            padding: 0 17px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 999px;
+            color: var(--text-main);
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(14px);
+            transition: transform 0.24s ease, border-color 0.24s ease, background 0.24s ease;
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+            border-color: rgba(114, 243, 255, 0.48);
+            background: rgba(114, 243, 255, 0.13);
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 340px;
+            gap: 18px;
+            align-items: stretch;
+        }
+
+        .photo-panel,
+        .index-panel {
+            border: 1px solid var(--glass-border);
+            border-radius: 22px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(18px);
+            box-shadow:
+                0 20px 58px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        .photo-panel {
+            overflow: hidden;
+        }
+
+        .photo-frame {
+            position: relative;
+            min-height: 640px;
+            background:
+                linear-gradient(135deg, rgba(8, 28, 40, 0.9), rgba(8, 16, 28, 0.9)),
+                rgba(5, 18, 27, 0.62);
+        }
+
+        .city-image {
+            display: block;
+            width: 100%;
+            height: 100%;
+            min-height: 640px;
+            object-fit: cover;
+        }
+
+        .city-image.is-empty {
+            opacity: 0;
+        }
+
+        .photo-empty {
+            position: absolute;
+            inset: 0;
+            display: none;
+            place-items: center;
+            padding: 30px;
+            color: var(--text-muted);
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .photo-empty.is-show {
+            display: grid;
+        }
+
+        .photo-frame::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(180deg, rgba(4, 13, 20, 0.08), transparent 45%, rgba(4, 13, 20, 0.36)),
+                radial-gradient(circle at 28% 24%, rgba(255, 255, 255, 0.12), transparent 24%);
+        }
+
+        .photo-caption {
+            position: absolute;
+            left: 22px;
+            right: 22px;
+            bottom: 22px;
+            z-index: 2;
+            max-width: 680px;
+            padding: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 18px;
+            background: rgba(5, 17, 25, 0.64);
+            backdrop-filter: blur(14px);
+        }
+
+        .photo-caption span {
+            color: var(--cyan);
+            font-size: 14px;
+        }
+
+        .photo-caption h2 {
+            margin-top: 6px;
+            font-size: clamp(32px, 4.6vw, 56px);
+            line-height: 1.08;
+            text-shadow: 0 0 18px rgba(114, 243, 255, 0.32);
+        }
+
+        .photo-caption p {
+            margin-top: 10px;
+            color: var(--text-soft);
+            line-height: 1.75;
+        }
+
+        .caption-keyword {
+            display: inline-flex;
+            width: max-content;
+            max-width: 100%;
+            margin-top: 12px;
+            padding: 7px 11px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 999px;
+            color: var(--gold);
+            background: rgba(255, 255, 255, 0.07);
+            font-weight: 700;
+        }
+
+        .index-panel {
+            display: flex;
+            flex-direction: column;
+            min-height: 640px;
+            padding: 20px;
+        }
+
+        .panel-head {
+            display: grid;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .panel-head h2 {
+            font-size: 24px;
+            line-height: 1.25;
+        }
+
+        .panel-head p {
+            color: var(--text-soft);
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        .city-index {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 9px;
+            max-height: 548px;
+            overflow: auto;
+            padding-right: 2px;
+            scrollbar-width: none;
+        }
+
+        .city-index::-webkit-scrollbar {
+            display: none;
+        }
+
+        .city-button {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            min-height: 40px;
+            padding: 0 10px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 13px;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-soft);
+            transition: transform 0.22s ease, background 0.22s ease, border-color 0.22s ease, color 0.22s ease;
+        }
+
+        .city-button:hover,
+        .city-button.is-active {
+            transform: translateY(-2px);
+            border-color: rgba(114, 243, 255, 0.62);
+            color: #06232c;
+            background: linear-gradient(135deg, var(--cyan), #fff2fb);
+            font-weight: 800;
+        }
+
+        .city-button i {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--cyan);
+            box-shadow: 0 0 10px var(--cyan);
+            flex: 0 0 auto;
+        }
+
+        @media (max-width: 1080px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .index-panel {
+                min-height: auto;
+            }
+
+            .city-index {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+                max-height: 260px;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .page-shell {
+                width: min(100% - 26px, 1240px);
+                padding-top: 20px;
+            }
+
+            .topbar {
+                flex-direction: column;
+            }
+
+            .nav-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .nav-link {
+                flex: 1 1 auto;
+            }
+
+            .photo-frame,
+            .city-image {
+                min-height: 520px;
+            }
+
+            .photo-caption {
+                left: 14px;
+                right: 14px;
+                bottom: 14px;
+            }
+
+            .city-index {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 460px) {
+            .brand h1 {
+                font-size: 32px;
+            }
+
+            .brand p {
+                font-size: 14px;
+            }
+
+            .city-index {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <video class="background-video" src="./背景视频.mp4" autoplay muted loop playsinline preload="metadata"></video>
+    <div class="background-mask"></div>
+
+    <main class="page-shell">
+        <header class="topbar">
+            <section class="brand" aria-labelledby="page-title">
+                <h1 id="page-title">人生足迹相册</h1>
+                <p>点击城市索引，切换这一站的记忆图片。</p>
+            </section>
+
+            <nav class="nav-actions" aria-label="页面导航">
+                <a class="nav-link" href="./index.html">返回首页</a>
+                <a class="nav-link" href="./games.html">游戏生涯</a>
+            </nav>
+        </header>
+
+        <section class="main-layout">
+            <article class="photo-panel" aria-label="城市图片预览">
+                <div class="photo-frame">
+                    <img class="city-image" id="city-image" alt="北京的足迹图片" />
+                    <div class="photo-empty" id="photo-empty"></div>
+
+                    <div class="photo-caption">
+                        <span id="city-province">北京</span>
+                        <h2 id="city-name">北京</h2>
+                        <p id="city-note">首都的灯火很适合当作旅途存档点。</p>
+                        <strong class="caption-keyword" id="city-keyword">霓虹 / 胡同</strong>
+                    </div>
+                </div>
+            </article>
+
+            <aside class="index-panel" aria-label="城市索引">
+                <div class="panel-head">
+                    <h2>城市索引</h2>
+                    <p>点击城市，查看对应图片。</p>
+                </div>
+
+                <div class="city-index" id="city-index"></div>
+            </aside>
+        </section>
+    </main>
+
+    <script>
+        // 只加载本地图片，不自动生成图片。把图片放到 footprint-images 文件夹中；如使用 png/webp，修改对应 image 字段即可。
+        const footprintCities = [
+            { name: "北京", province: "北京", keyword: "故宫 / 胡同", image: "./footprint-images/北京.jpg", note: "首都的历史轴线与胡同烟火交叠，适合当作旅途的起点。" },
+            { name: "桂林", province: "广西", keyword: "漓江 / 山水", image: "./footprint-images/桂林.jpg", note: "漓江与喀斯特峰林把城市铺成山水画，水面和群峰都很适合慢慢看。" },
+            { name: "长沙", province: "湖南", keyword: "橘子洲 / 岳麓山", image: "./footprint-images/长沙.jpg", note: "橘子洲、湘江和夜市热气连成一片，城市明亮又有生命力。" },
+            { name: "唐山", province: "河北", keyword: "工业记忆 / 凤凰城", image: "./footprint-images/唐山.jpg", note: "工业底色和凤凰涅槃的城市记忆并存，夜色里有坚韧的光。" },
+            { name: "武汉", province: "湖北", keyword: "长江大桥 / 黄鹤楼", image: "./footprint-images/武汉.jpg", note: "长江穿城而过，桥与楼把江城的历史和日常都照亮了。" },
+            { name: "乐山", province: "四川", keyword: "乐山大佛 / 三江", image: "./footprint-images/乐山.jpg", note: "三江汇流处的大佛静坐山岩，城市也因此多了沉稳的气场。" },
+            { name: "德阳", province: "四川", keyword: "三星堆 / 旌湖", image: "./footprint-images/德阳.jpg", note: "三星堆文明的神秘感与旌湖水色交织，像把古蜀故事翻到眼前。" },
+            { name: "成都", province: "四川", keyword: "熊猫 / 烟火", image: "./footprint-images/成都.jpg", note: "熊猫、茶馆、火锅和街巷慢节奏，让这一站很会照顾人。" },
+            { name: "都江堰", province: "四川", keyword: "都江堰 / 赞叹", image: "./footprint-images/都江堰.jpg", note: "都江堰的水利智慧与周边自然风光让这一站充满赞叹。" },
+            { name: "彝族", province: "四川", keyword: "泸沽湖 / 世外桃源", image: "./footprint-images/彝族.jpg", note: "静谧，让时间慢下来，但又不乏热情淳朴的彝族篝火晚会。" },
+            { name: "清远", province: "广东", keyword: "北江 / 山水", image: "./footprint-images/清远.jpg", note: "北江风和岭南山色让南方变得清透，空气里像有一点甜。" },
+            { name: "洛阳", province: "河南", keyword: "牡丹 / 龙门石窟", image: "./footprint-images/洛阳.jpg", note: "古都气象、牡丹花事和龙门石窟让这一站有很厚的时间感。" },
+            { name: "萍乡", province: "江西", keyword: "武功山 / 云海", image: "./footprint-images/萍乡.jpg", note: "武功山草甸和云海把旅途拉向高处，风吹过时很有少年气。" },
+            { name: "济南", province: "山东", keyword: "泉水 / 大明湖", image: "./footprint-images/济南.jpg", note: "泉水、老城和大明湖把城市照得很柔，像一路清亮的水声。" },
+            { name: "南昌", province: "江西", keyword: "滕王阁 / 赣江", image: "./footprint-images/南昌.jpg", note: "滕王阁、赣江和城市夜风一起铺开，江岸灯光很有记忆点。" },
+            { name: "吉安", province: "江西", keyword: "井冈山 / 庐陵", image: "./footprint-images/吉安.jpg", note: "井冈山红色记忆与庐陵文化并存，城市有厚实的精神底色。" },
+            { name: "广州", province: "广东", keyword: "珠江 / 骑楼", image: "./footprint-images/广州.jpg", note: "珠江夜色、骑楼街巷和早茶烟火，让城市明亮又从容。" },
+            { name: "深圳", province: "广东", keyword: "湾区 / 创新", image: "./footprint-images/深圳.jpg", note: "海风、高楼和创新节奏一起向前，城市像一直亮着的窗口。" },
+            { name: "佛山", province: "广东", keyword: "醒狮 / 祖庙", image: "./footprint-images/佛山.jpg", note: "醒狮、武术和岭南祖庙让城市有热烈又扎实的文化气。" },
+            { name: "香港", province: "香港", keyword: "海港 / 霓虹", image: "./footprint-images/香港.jpg", note: "海港、霓虹和密集街景，把地图南端点亮成一颗星。" },
+            { name: "苏州", province: "江苏", keyword: "园林 / 水巷", image: "./footprint-images/苏州.jpg", note: "园林和水巷把时间折得很细，走路都像翻页。" },
+            { name: "西安", province: "陕西", keyword: "城墙 / 兵马俑", image: "./footprint-images/西安.jpg", note: "城墙、古都街巷和秦俑记忆，让城市在夜风里也很厚重。" },
+            { name: "渭南", province: "陕西", keyword: "华山 / 关中", image: "./footprint-images/渭南.jpg", note: "华山险峻和关中平原相邻，旅途一下子有了山岳的锋利感。" },
+            { name: "天津", province: "天津", keyword: "海河 / 津门", image: "./footprint-images/天津.jpg", note: "海河夜景、洋楼街区和津味烟火，把城市调成轻快的北方港口色。" },
+            { name: "丽江", province: "云南", keyword: "古城 / 雪山", image: "./footprint-images/丽江.jpg", note: "丽江古城临水为街，远处雪山与纳西风情让时间慢下来。" },
+            { name: "大理", province: "云南", keyword: "洱海 / 苍山", image: "./footprint-images/大理.jpg", note: "风从洱海来，云在苍山边停，整段旅途都变轻了。" },
+            { name: "昆明", province: "云南", keyword: "春城 / 滇池", image: "./footprint-images/昆明.jpg", note: "春城气候、滇池水光和花影一起散开，空气里有柔和的亮度。" },
+            { name: "杭州", province: "浙江", keyword: "西湖 / 灵隐", image: "./footprint-images/杭州.jpg", note: "西湖美景与灵隐禅意让这座城市充满诗意。" },
+            { name: "上海", province: "上海", keyword: "外滩 / 东方明珠", image: "./footprint-images/上海.jpg", note: "外滩的万国建筑博览和东方明珠的现代气息让这座城市充满魅力。" },
+            { name: "呼和浩特", province: "内蒙古", keyword: "草原 / 市区", image: "./footprint-images/呼和浩特.jpg", note: "草原的辽阔与城市的繁华交织，让这座城市充满独特的魅力。" },
+            { name: "曲阜", province: "山东", keyword: "孔庙 / 孔林", image: "./footprint-images/曲阜.jpg", note: "曲阜是孔子的故乡，孔庙、孔林等文化遗迹让人感受到深厚的历史底蕴。" }
+        ];
+
+        const cityIndex = document.querySelector("#city-index");
+        const cityImage = document.querySelector("#city-image");
+        const photoEmpty = document.querySelector("#photo-empty");
+        const cityProvince = document.querySelector("#city-province");
+        const cityNameElement = document.querySelector("#city-name");
+        const cityNote = document.querySelector("#city-note");
+        const cityKeyword = document.querySelector("#city-keyword");
+
+        function renderCityButtons() {
+            footprintCities.forEach((city) => {
+                const button = document.createElement("button");
+                button.className = "city-button";
+                button.type = "button";
+                button.dataset.city = city.name;
+                button.innerHTML = `<span>${city.name}</span><i aria-hidden="true"></i>`;
+                button.addEventListener("click", () => selectCity(city.name));
+                cityIndex.appendChild(button);
+            });
+        }
+
+        function selectCity(selectedCityName) {
+            const city = footprintCities.find((item) => item.name === selectedCityName);
+
+            if (!city) {
+                return;
+            }
+
+            cityImage.classList.remove("is-empty");
+            photoEmpty.classList.remove("is-show");
+            photoEmpty.textContent = "";
+            cityImage.src = city.image;
+            cityImage.alt = `${city.name}的足迹图片`;
+            cityProvince.textContent = city.province;
+            cityNameElement.textContent = city.name;
+            cityNote.textContent = city.note;
+            cityKeyword.textContent = city.keyword;
+
+            document.querySelectorAll(".city-button").forEach((button) => {
+                button.classList.toggle("is-active", button.dataset.city === city.name);
+            });
+        }
+
+        cityImage.addEventListener("error", () => {
+            const activeCity = footprintCities.find((city) => city.name === cityNameElement.textContent);
+
+            if (!activeCity) {
+                return;
+            }
+
+            cityImage.classList.add("is-empty");
+            photoEmpty.classList.add("is-show");
+            photoEmpty.textContent = `请放入图片：${activeCity.image}`;
+        });
+
+        renderCityButtons();
+        selectCity("北京");
+    </script>
+</body>
+</html>
