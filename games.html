@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>桜小路秋玌的游戏生涯</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            cursor: url("./鼠标指针/arrow.cur"), url("./鼠标指针/arrow.ani"), auto;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            color: white;
+            background: #160b24;
+            overflow-x: hidden;
+            cursor: url("./鼠标指针/arrow.cur"), url("./鼠标指针/arrow.ani"), auto;
+        }
+
+        a,
+        button {
+            cursor: url("./鼠标指针/link.cur"), url("./鼠标指针/link.ani"), pointer;
+        }
+
+        .background-video {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+
+        .background-mask {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background:
+                radial-gradient(circle at 72% 0%, rgba(255, 145, 220, 0.18), transparent 36%),
+                linear-gradient(90deg, rgba(30, 11, 42, 0.94), rgba(30, 11, 42, 0.78));
+            pointer-events: none;
+        }
+
+        .page-shell {
+            width: min(1180px, calc(100% - 42px));
+            margin: 0 auto;
+            padding: 38px 0 70px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 34px;
+        }
+
+        .brand h1 {
+            font-size: clamp(34px, 5vw, 58px);
+            line-height: 1.1;
+            text-shadow: 0 0 24px rgba(255, 153, 230, 0.36);
+        }
+
+        .brand p {
+            margin-top: 10px;
+            color: #ead9ff;
+            line-height: 1.7;
+        }
+
+        .back-link {
+            flex: 0 0 auto;
+            padding: 12px 20px;
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 999px;
+            color: white;
+            text-decoration: none;
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 22px rgba(255,126,179,0.24);
+            transition: 0.3s;
+        }
+
+        .back-link:hover {
+            background: linear-gradient(45deg, #ff7eb3, #a18cd1);
+            transform: translateY(-2px);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            padding: 18px 20px;
+            border: 1px solid rgba(255,255,255,0.14);
+            border-radius: 18px;
+            background: rgba(255,255,255,0.09);
+            backdrop-filter: blur(14px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.22);
+        }
+
+        .summary-card span {
+            color: #d8c8ff;
+            font-size: 14px;
+        }
+
+        .summary-card strong {
+            display: block;
+            margin-top: 8px;
+            font-size: 28px;
+            color: #fff;
+        }
+
+        .game-list {
+            display: grid;
+            gap: 18px;
+        }
+
+        .game-item {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 28px;
+            align-items: center;
+            padding: 18px;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 22px;
+            background: rgba(20, 10, 32, 0.62);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 14px 36px rgba(0,0,0,0.24);
+        }
+
+        .game-cover {
+            position: relative;
+            height: 150px;
+            overflow: hidden;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(255,126,179,0.35), rgba(80,178,255,0.28));
+        }
+
+        .game-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .game-cover::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent, rgba(0,0,0,0.28));
+        }
+
+        .game-info {
+            min-width: 0;
+        }
+
+        .game-upper {
+            display: grid;
+            grid-template-columns: minmax(260px, 1fr) minmax(260px, 0.72fr);
+            gap: 24px;
+            align-items: start;
+        }
+
+        .game-info h2 {
+            margin-bottom: 14px;
+            font-size: clamp(26px, 4vw, 40px);
+            font-weight: 700;
+        }
+
+        .game-hours {
+            display: block;
+            margin-bottom: 12px;
+            color: #f2eaff;
+            font-size: 30px;
+        }
+
+        .progress-track {
+            width: min(520px, 100%);
+            height: 12px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.12);
+        }
+
+        .progress-fill {
+            width: var(--progress);
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--bar-start), var(--bar-end));
+            box-shadow: 0 0 14px rgba(255, 126, 179, 0.32);
+        }
+
+        .screenshot-gallery {
+            padding: 12px;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 18px;
+            background: rgba(255,255,255,0.08);
+        }
+
+        .screenshot-title {
+            display: block;
+            margin-bottom: 10px;
+            color: #ffd6ff;
+            font-weight: 700;
+        }
+
+        .screenshot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 10px;
+        }
+
+        .screenshot-button {
+            width: 100%;
+            height: 82px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.16);
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(255,126,179,0.24), rgba(80,178,255,0.18));
+            box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+            transition: 0.3s;
+        }
+
+        .screenshot-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 26px rgba(255,126,179,0.24);
+        }
+
+        .screenshot-button img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .game-review {
+            margin-top: 14px;
+            padding: 14px 16px;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 16px;
+            background: rgba(255,255,255,0.08);
+            color: #dccfff;
+            line-height: 1.7;
+        }
+
+        .game-review strong {
+            display: block;
+            margin-bottom: 6px;
+            color: #ffd6ff;
+        }
+
+        .rating-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            padding: 7px 12px;
+            border-radius: 999px;
+            color: #fff3bf;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .image-lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 28px;
+            background: rgba(4, 4, 18, 0.82);
+            backdrop-filter: blur(12px);
+        }
+
+        .image-lightbox.is-open {
+            display: flex;
+        }
+
+        .lightbox-panel {
+            width: min(1100px, 100%);
+            position: relative;
+        }
+
+        .lightbox-panel img {
+            width: 100%;
+            max-height: 78vh;
+            object-fit: contain;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.08);
+            box-shadow: 0 24px 70px rgba(0,0,0,0.45);
+        }
+
+        .lightbox-caption {
+            margin-top: 12px;
+            color: #ead9ff;
+            text-align: center;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -18px;
+            right: -18px;
+            width: 42px;
+            height: 42px;
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 50%;
+            color: white;
+            background: rgba(24, 20, 48, 0.92);
+            font-size: 26px;
+            line-height: 1;
+        }
+
+        @media(max-width: 980px) {
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .game-upper {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width: 720px) {
+            .page-shell {
+                width: min(100% - 28px, 1180px);
+                padding-top: 24px;
+            }
+
+            .game-item {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .game-cover {
+                height: auto;
+                aspect-ratio: 16 / 7.5;
+            }
+
+            .game-hours {
+                font-size: 24px;
+            }
+
+            .screenshot-button {
+                height: 72px;
+            }
+
+            .lightbox-close {
+                top: -14px;
+                right: -10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <video class="background-video" autoplay muted loop playsinline>
+        <source src="背景视频.mp4" type="video/mp4">
+    </video>
+    <div class="background-mask"></div>
+
+    <main class="page-shell">
+        <header class="topbar">
+            <div class="brand">
+                <h1>我的游戏生涯</h1>
+                <p>记录那些陪我熬夜、开荒、摸鱼和反复回坑的游戏。</p>
+            </div>
+
+            <a class="back-link" href="index.html">返回主页</a>
+        </header>
+
+        <section class="summary-grid" aria-label="游戏数据总览">
+            <div class="summary-card">
+                <span>收录条目</span>
+                <strong id="totalGames">0</strong>
+            </div>
+            <div class="summary-card">
+                <span>累计时长</span>
+                <strong id="totalHours">0h</strong>
+            </div>
+            <div class="summary-card">
+                <span>最常游玩</span>
+                <strong id="topGame">-</strong>
+            </div>
+        </section>
+
+        <section>
+            <div class="game-list" id="gameList"></div>
+        </section>
+    </main>
+
+    <div class="image-lightbox" id="imageLightbox" aria-hidden="true">
+        <div class="lightbox-panel" role="dialog" aria-modal="true" aria-label="游戏截图预览">
+            <button class="lightbox-close" id="lightboxClose" type="button" aria-label="关闭大图">×</button>
+            <img id="lightboxImage" src="" alt="游戏截图大图">
+            <p class="lightbox-caption" id="lightboxCaption"></p>
+        </div>
+    </div>
+
+    <script>
+        /*
+            以后增加游戏很简单：
+            复制下面 games 数组里的一段对象，修改 title、hours、image、screenshots、review 等内容即可。
+            image 可以换成本地图片路径，例如：game-images/stardew.jpg
+            screenshots 用来放你的游戏截图，例如：screenshots: ["game-screenshots/stardew-1.jpg"]
+        */
+        const games = [
+            {
+                title: "SteamVR",
+                hours: 604.2,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/250820/header.jpg",
+                screenshots: [
+                    "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/250820/header.jpg"
+                ],
+                color: ["#ffc24a", "#ff7e32"],
+                rating: 4,
+                review: "VR 世界的入口，很多体验都从这里开始，折腾设备和设置也算是游戏的一部分。"
+            },
+            {
+                title: "MInecraft",
+                hours: 1000,
+                image: "https://store-images.s-microsoft.com/image/apps.48268.13510798885735219.85bdba62-631e-4ad9-9829-189064a9ffee.02218d33-1efe-4022-b751-49b43a3d73fc",
+                color: ["#ffc24a", "#ff7e32"],
+                rating: 5,
+                review: "陪伴最久的游戏，从三年级至今。最喜欢虚无世界、暮色、工业、宝可梦mod。2b2t服务器的经历也很难忘。"
+            },
+            {
+                title: "碧蓝航线",
+                hours: 1666,
+                image: "https://cdn.max-c.com/mobile/app/icon/c4b5b20af370a7b64f1cdf9cad7f79be.webp",
+                color: ["#ffc24a", "#ff7e32"],
+                rating: 5,
+                review: "从初二玩到至今的二次元手游，画风非常喜欢，开电脑第一件事就是后台开脚本挂机。"
+            },
+              {
+                title: "诛仙世界",
+                hours: 666,
+                image: "https://heyboxbj.max-c.com/gameimg/steam_item_assets/b59572785e0a686c37a4205023cf5c07.jpg?imageMogr2/thumbnail/460x215%3E/format/webp",
+                color: ["#ffc24a", "#ff7e32"],
+                rating: 5,
+                review: "画面很精致的仙侠mmo，认识了很多朋友。开荒高难副本和gvg很有意思。还有在世界频道和人对线。"
+            },
+            {
+                title: "Wallpaper Engine",
+                hours: 270.8,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/431960/header.jpg",
+                color: ["#ffc24a", "#ff7e32"],
+                rating: 5,
+                review: "桌面美化核心软件，二次元动态壁纸浓度拉满，是氛围感来源。"
+            },
+            {
+                title: "星露谷物语",
+                hours: 169.3,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/413150/header.jpg",
+                color: ["#ffc24a", "#ff7e32"],
+                rating: 5,
+                review: "慢慢种田、钓鱼、下矿，很适合放松。每次回去都有一种回家的感觉。"
+            },
+            {
+                title: "Palworld / 幻兽帕鲁",
+                hours: 139.2,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1623730/header.jpg",
+                color: ["#ff38ff", "#b837ff"],
+                rating: 4,
+                review: "抓帕鲁、建基地、自动化流水线，爽点很直接，和朋友一起玩更有意思。"
+            },
+            {
+                title: "节奏光剑VR",
+                hours: 104.4,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/620980/header.jpg",
+                color: ["#ffc24a", "#ff7e32"],
+                rating: 5,
+                review: "VR 音游代表，挥剑切方块的反馈非常舒服，也是运动量最明显的一类游戏。"
+            },
+            {
+                title: "CS2",
+                hours: 100.4,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/730/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "竞技性很强，手感和配合都重要。赢一局开心，输一局上头。"
+            },
+            {
+                title: "永劫无间",
+                hours: 85.4,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1203220/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "动作反馈和武侠氛围都很突出，振刀成功那一下特别有成就感。"
+            },
+            {
+                title: "Blender",
+                hours: 24.7,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/365670/header.jpg",
+                color: ["#ff38ff", "#b837ff"],
+                rating: 4,
+                review: "严格说更像创作工具，但建模、动画和材质探索本身也很像一场大型游戏。"
+            },
+            {
+                title: "近月少女的礼仪",
+                hours: 19.7,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1776970/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 5,
+                review: "偏剧情向的体验，角色和文本是重点，适合安静地慢慢读。"
+            },
+            {
+                title: "战舰世界",
+                hours: 70.1,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/552990/header.jpg",
+                color: ["#ff38ff", "#b837ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "VRChat",
+                hours: 57.6,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/438100/header.jpg",
+                color: ["#ffc24a", "#ff7e32"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "雀魂麻将",
+                hours: 48.9,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/2739990/header.jpg",
+                color: ["#ff38ff", "#b837ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "赛博朋克2077",
+                hours: 42.5,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1091500/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "谜语小丑",
+                hours: 39.8,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1277930/header.jpg",
+                color: ["#ff38ff", "#b837ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "泰拉瑞亚",
+                hours: 38.4,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/105600/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "英灵神殿",
+                hours: 25.3,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/892970/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "糖豆人",
+                hours: 25,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1097150/header.jpg",
+                color: ["#ff38ff", "#b837ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "SAO Utils: Beta",
+                hours: 24,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/786520/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "双人成行",
+                hours: 24,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1426210/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 5,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "木筏",
+                hours: 23.8,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/648800/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "SAO Utils 2: Progressive",
+                hours: 23.7,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/877280/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "方舟：生存进化",
+                hours: 21.7,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/346110/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "手柄伴侣",
+                hours: 21.1,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/367670/header.jpg",
+                color: ["#ff38ff", "#b837ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "求生之路2",
+                hours: 19.1,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/550/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "Re:LieF ～亲给亲爱的你～",
+                hours: 18.6,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1518770/header.jpg",
+                color: ["#ff38ff", "#b837ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "莱莎的炼金工房2",
+                hours: 17.3,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1257290/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "突然＊恋人",
+                hours: 17.3,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/2510810/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "PARQUET",
+                hours: 15.9,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1662840/header.jpg",
+                color: ["#ff38ff", "#b837ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "无主之地3",
+                hours: 15.8,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/397540/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "双影奇境",
+                hours: 14.7,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/2001120/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "3DMark",
+                hours: 13.8,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/223850/header.jpg",
+                color: ["#ff38ff", "#b837ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "漫威争锋",
+                hours: 13.7,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/2767030/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "前方高能",
+                hours: 12.1,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/2881650/header.jpg",
+                color: ["#ffc24a", "#ff7e32"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "魅镜2：Project X",
+                hours: 11.3,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1832640/header.jpg",
+                color: ["#ffc24a", "#ff7e32"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "喵斯快跑",
+                hours: 11,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/774171/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "千恋＊万花",
+                hours: 9.9,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1144400/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "橡胶强盗",
+                hours: 9.8,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1206610/header.jpg",
+                color: ["#ffc24a", "#ff7e32"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "主播女孩重度依赖",
+                hours: 9.5,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1451940/header.jpg",
+                color: ["#ffc24a", "#ff7e32"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "东方幕华祭 春雪篇",
+                hours: 9.2,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1031480/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "尼尔：机械纪元",
+                hours: 8.8,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/524220/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "霍格沃茨之遗",
+                hours: 8.5,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/990080/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "森林之子",
+                hours: 8.1,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1326470/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "黑神话：悟空",
+                hours: 8.1,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/2358720/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "泰坦陨落2",
+                hours: 7.7,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1237970/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "揍击派对",
+                hours: 7.4,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/880940/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "CLANNAD",
+                hours: 6.5,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/324160/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 5,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "米塔",
+                hours: 5.9,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/2527500/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "碧蓝航线：Crosswave",
+                hours: 5.9,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1150080/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "古墓丽影：崛起",
+                hours: 5.6,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/391220/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "半条命：Alyx",
+                hours: 5,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/546560/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "森林",
+                hours: 4.9,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/242760/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "绝地求生",
+                hours: 4.9,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/578080/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "爱上火车-Last Run!!",
+                hours: 4.7,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1434480/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "Zenith: Nexus",
+                hours: 4.1,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1403370/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "星引擎 Party",
+                hours: 4,
+                image: makePlaceholderCover("星引擎 Party"),
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "病情哥哥与病弱妹妹",
+                hours: 3.9,
+                image: makePlaceholderCover("病情哥哥与病弱妹妹"),
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "逃生：试炼",
+                hours: 3.7,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1304930/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "地产大亨",
+                hours: 3.7,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/663390/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "人类一败涂地",
+                hours: 2.8,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/477160/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "苍之彼方的四重奏",
+                hours: 2.8,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1044620/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "雪境迷途遇仙踪",
+                hours: 2.8,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1854980/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "杯杯倒满",
+                hours: 2.6,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/2336220/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "Fireboy & Watergirl",
+                hours: 2.4,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1003480/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "魅魔",
+                hours: 2.4,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/985830/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "胡闹厨房2",
+                hours: 2.4,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/728880/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "荒野大镖客：救赎2",
+                hours: 2.3,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1174180/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "Summer Pockets",
+                hours: 2.1,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/897220/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "文字游戏：第零章",
+                hours: 2,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1507970/header.jpg",
+                color: ["#ffc24a", "#ff7e32"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "少女理论以及周边",
+                hours: 1.9,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/2567190/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "狂战传说",
+                hours: 1.9,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/429660/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "VirtualCast",
+                hours: 1.8,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/947890/header.jpg",
+                color: ["#ff38ff", "#b837ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "逃离后室",
+                hours: 1.7,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1943950/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "原子之心",
+                hours: 1.4,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/668580/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "绝地潜兵2",
+                hours: 1.4,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/553850/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "菜市场模拟器",
+                hours: 1.4,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/2878420/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "多边形造桥",
+                hours: 1.3,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/367450/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "城市：天际线",
+                hours: 1.3,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/255710/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "饥荒联机版",
+                hours: 1.3,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/322330/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "约会大作战：凛绪轮回",
+                hours: 1.2,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1047440/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "吸血鬼的旋律",
+                hours: 1,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1377360/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "双人成行好友通行证",
+                hours: 1,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/2995920/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "Apex 英雄",
+                hours: 0.9,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1172470/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "怪物猎人：崛起",
+                hours: 0.9,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1446780/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "不存在的你，和我",
+                hours: 0.9,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/2873080/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "反恐精英VR",
+                hours: 0.9,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/555160/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "人群模拟器",
+                hours: 0.9,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1141650/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "恶魔轮盘",
+                hours: 0.7,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/2835570/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "彩虹六号：围攻X",
+                hours: 0.6,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/359550/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "纪念碑谷：全景版",
+                hours: 0.6,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1927720/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "吸血鬼的旋律2",
+                hours: 0.5,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/2532050/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "逆行竞技场",
+                hours: 0.5,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1055210/header.jpg",
+                color: ["#41c8ff", "#3a76ff"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "你画我猜",
+                hours: 0.4,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1483870/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "极品飞车：热度",
+                hours: 0.3,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1222680/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "鹅鸭杀",
+                hours: 0.3,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1568590/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "中国式家长",
+                hours: 0.2,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/736190/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "雨中冒险2",
+                hours: 0.1,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/632360/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "杀手2",
+                hours: 0.1,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/863550/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "ARK: The Survival Of The Fittest",
+                hours: 0,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/407530/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "三色绘恋",
+                hours: 0,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/668630/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "妄想症：Deliver Me",
+                hours: 0,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/779640/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "战地风云1",
+                hours: 0,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1238840/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "不确定：最后安静日",
+                hours: 0,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/406970/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            },
+            {
+                title: "战地风云5",
+                hours: 0,
+                image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1238810/header.jpg",
+                color: ["#63d45a", "#9be85d"],
+                rating: 4,
+                review: "从游戏墙截图补充的条目，后续可以继续完善体验评价。"
+            }
+        ];
+
+        const gameList = document.getElementById("gameList");
+        const totalGames = document.getElementById("totalGames");
+        const totalHours = document.getElementById("totalHours");
+        const topGame = document.getElementById("topGame");
+        const imageLightbox = document.getElementById("imageLightbox");
+        const lightboxImage = document.getElementById("lightboxImage");
+        const lightboxCaption = document.getElementById("lightboxCaption");
+        const lightboxClose = document.getElementById("lightboxClose");
+
+        function renderStars(score) {
+            return "★".repeat(score) + "☆".repeat(5 - score);
+        }
+
+        function makePlaceholderCover(title) {
+            const safeTitle = title
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;");
+            const svg = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="640" height="300" viewBox="0 0 640 300">
+                    <defs>
+                        <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ff7eb3"/>
+                            <stop offset="52%" stop-color="#7f7fd5"/>
+                            <stop offset="100%" stop-color="#2ed8ff"/>
+                        </linearGradient>
+                    </defs>
+                    <rect width="640" height="300" fill="url(#bg)"/>
+                    <rect width="640" height="300" fill="rgba(10,10,30,0.34)"/>
+                    <text x="36" y="164" fill="white" font-size="42" font-family="Microsoft YaHei, sans-serif" font-weight="700">${safeTitle}</text>
+                    <text x="36" y="218" fill="#ffe9ff" font-size="22" font-family="Microsoft YaHei, sans-serif">游戏生涯记录</text>
+                </svg>
+            `;
+
+            return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+        }
+
+        function getScreenshots(game) {
+            return game.screenshots?.length ? game.screenshots : [game.image];
+        }
+
+        function renderScreenshots(game) {
+            return getScreenshots(game).map((src, index) => `
+                <button class="screenshot-button" type="button" data-image="${src}" data-caption="${game.title} 截图 ${index + 1}">
+                    <img src="${src}" alt="${game.title} 截图 ${index + 1}" loading="lazy" onerror="this.style.display='none'">
+                </button>
+            `).join("");
+        }
+
+        function openLightbox(src, caption) {
+            lightboxImage.src = src;
+            lightboxCaption.textContent = caption;
+            imageLightbox.classList.add("is-open");
+            imageLightbox.setAttribute("aria-hidden", "false");
+        }
+
+        function closeLightbox() {
+            imageLightbox.classList.remove("is-open");
+            imageLightbox.setAttribute("aria-hidden", "true");
+            lightboxImage.src = "";
+        }
+
+        function renderGames() {
+            const fullProgressHours = 200;
+            const mostPlayedGame = games.reduce((top, game) => game.hours > top.hours ? game : top, games[0]);
+            const total = games.reduce((sum, game) => sum + game.hours, 0);
+
+            totalGames.textContent = games.length;
+            totalHours.textContent = `${total.toFixed(1)}h`;
+            topGame.textContent = mostPlayedGame.title;
+
+            gameList.innerHTML = "";
+
+            games.forEach((game) => {
+                const progress = Math.min(100, Math.max(8, (game.hours / fullProgressHours) * 100));
+
+                const item = document.createElement("article");
+                item.className = "game-item";
+                item.style.setProperty("--progress", `${progress}%`);
+                item.style.setProperty("--bar-start", game.color[0]);
+                item.style.setProperty("--bar-end", game.color[1]);
+                item.innerHTML = `
+                    <div class="game-cover">
+                        <img src="${game.image}" alt="${game.title} 游戏图片" loading="lazy" onerror="this.style.display='none'">
+                    </div>
+                    <div class="game-info">
+                        <div class="game-upper">
+                            <div>
+                                <h2>${game.title}</h2>
+                                <span class="game-hours">${game.hours.toFixed(1)}h</span>
+                                <div class="progress-track">
+                                    <div class="progress-fill"></div>
+                                </div>
+                            </div>
+
+                            <div class="screenshot-gallery">
+                                <span class="screenshot-title">游戏截图</span>
+                                <div class="screenshot-grid">
+                                    ${renderScreenshots(game)}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="game-review">
+                            <strong>我的评价</strong>
+                            <p>${game.review}</p>
+                        </div>
+                        <span class="rating-pill">${renderStars(game.rating)}</span>
+                    </div>
+                `;
+                gameList.appendChild(item);
+            });
+        }
+
+        renderGames();
+
+        gameList.addEventListener("click", (event) => {
+            const button = event.target.closest(".screenshot-button");
+            if (!button) return;
+            openLightbox(button.dataset.image, button.dataset.caption);
+        });
+
+        lightboxClose.addEventListener("click", closeLightbox);
+
+        imageLightbox.addEventListener("click", (event) => {
+            if (event.target === imageLightbox) {
+                closeLightbox();
+            }
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                closeLightbox();
+            }
+        });
+    </script>
+</body>
+</html>
