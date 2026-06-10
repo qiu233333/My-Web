@@ -1161,7 +1161,7 @@ async function sendMessage() {
   }, 20000); // 20秒超时
 
   try {
-    const res = await fetch("http://qiu233.cn:3001/health/api/chat", {
+    const res = await fetch("http://qiu233.cn:3001/api/chat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
